@@ -1,14 +1,14 @@
+import React, { useEffect, useState } from "react";
 import {
-  border,
   Box,
   Spinner,
   Table,
+  Tbody,
   Td,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import axios from "axios";
 
 export function BoardList() {
@@ -19,6 +19,7 @@ export function BoardList() {
       .get("/api/board/list")
       .then((response) => setBoardList(response.data));
   }, []);
+
   return (
     <Box>
       <h1>게시물 목록</h1>
@@ -32,17 +33,21 @@ export function BoardList() {
               <Th>at</Th>
             </Tr>
           </Thead>
+          <Tbody>
+            {boardList === null ? (
+              <Spinner />
+            ) : (
+              boardList.map((board) => (
+                <Tr>
+                  <Td>{board.id}</Td>
+                  <Td>{board.title}</Td>
+                  <Td>{board.writer}</Td>
+                  <Td>{board.inserted}</Td>
+                </Tr>
+              ))
+            )}
+          </Tbody>
         </Table>
-        {boardList || <Spinner />}
-        {boardList &&
-          boardList.map((border) => (
-            <Tr>
-              <Td>{border.id}</Td>
-              <Td>{border.title}</Td>
-              <Td>{border.writer}</Td>
-              <Td>{border.inserted}</Td>
-            </Tr>
-          ))}
       </Box>
     </Box>
   );
