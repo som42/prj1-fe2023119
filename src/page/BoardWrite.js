@@ -9,6 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
@@ -17,6 +18,7 @@ export function BoardWrite() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -31,12 +33,13 @@ export function BoardWrite() {
           description: "새 글이 저장되었습니다.",
           status: "success",
         });
+        navigate("/");
       })
       .catch((error) => {
-        console.log(error.respones.status);
-        if (error.respones.status === 400) {
+        console.log(error.response.status);
+        if (error.response.status === 400) {
           toast({
-            description: "작성한 내용을 확인해주세요",
+            description: "작성한 내용을 확인해주세요.",
             status: "error",
           });
         } else {
@@ -46,9 +49,7 @@ export function BoardWrite() {
           });
         }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
