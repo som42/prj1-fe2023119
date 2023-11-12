@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   FormLabel,
   Input,
@@ -7,7 +8,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useImmer } from "use-immer";
 import axios from "axios";
 
@@ -16,6 +17,8 @@ export function BoardEdit() {
 
   // /edit/:id
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -26,18 +29,6 @@ export function BoardEdit() {
   if (board === null) {
     return <Spinner />;
   }
-
-  const handleTitleChange = (e) => {
-    updateBoard((draft) => {
-      draft.title = e.target.value;
-    });
-  };
-
-  const handleContentChange = (e) => {
-    updateBoard((draft) => {
-      draft.content = e.target.value;
-    });
-  };
 
   return (
     <Box>
@@ -75,6 +66,9 @@ export function BoardEdit() {
           }}
         />
       </FormControl>
+      <Button colorScheme="blue">저장</Button>
+      {/* navigate(-1) : 이전 경로로 이동*/}
+      <Button onClick={() => navigate(-1)}>취소</Button>
     </Box>
   );
 }
