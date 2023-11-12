@@ -60,7 +60,7 @@ export function BoardView() {
 
   return (
     <Box>
-      <h1>글 보기</h1>
+      <h1>{board.id}번 글 보기</h1>
       <FormControl>
         <FormLabel>제목</FormLabel>
         <Input value={board.title} readOnly />
@@ -77,7 +77,9 @@ export function BoardView() {
         <FormLabel>작성일시</FormLabel>
         <Input value={board.inserted} readOnly />
       </FormControl>
-      <Button colorScheme="purple">수정</Button>
+      <Button colorScheme="purple" onClick={() => navigate("/edit/" + id)}>
+        수정
+      </Button>
       <Button colorScheme="red" onClick={onOpen}>
         삭제
       </Button>
