@@ -85,7 +85,7 @@ export function MemberSignup() {
       .then(() => {
         setEmailAvailable(false);
         toast({
-          description: "이미 사용 중인 email 입니다.",
+          description: "이미 사용 중인 email입니다.",
           status: "warning",
         });
       })
@@ -147,9 +147,9 @@ export function MemberSignup() {
               setEmail(e.target.value);
             }}
           />
-          <Button onClick={handleEmailCheck}>중복 체크</Button>
+          <Button onClick={handleEmailCheck}>중복체크</Button>
         </Flex>
-        <FormErrorMessage>email 중복 체크를 해주세요</FormErrorMessage>
+        <FormErrorMessage>email 중복 체크를 해주세요.</FormErrorMessage>
       </FormControl>
       <Button
         isDisabled={!submitAvailable}
