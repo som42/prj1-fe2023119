@@ -6,6 +6,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -15,12 +16,13 @@ export function MemberSignup() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
-
   const [idAvailable, setIdAvailable] = useState(false);
+
+  const toast = useToast();
 
   let submitAvailable = true;
 
-  if (idAvailable) {
+  if (!idAvailable) {
     submitAvailable = false;
   }
 
@@ -31,6 +33,7 @@ export function MemberSignup() {
   if (password.length === 0) {
     submitAvailable = false;
   }
+
   function handleSubmit() {
     axios
       .post("/api/member/signup", {
@@ -51,10 +54,18 @@ export function MemberSignup() {
       .get("/api/member/check?" + searchParam.toString())
       .then(() => {
         setIdAvailable(false);
+        toast({
+          description: "이미 사용 중인 ID입니다.",
+          status: "warning",
+        });
       })
       .catch((error) => {
-        if (error.response.staus === 404) {
+        if (error.response.status === 404) {
           setIdAvailable(true);
+          toast({
+            description: "사용 가능한 ID입니다.",
+            status: "success",
+          });
         }
       });
   }
@@ -65,7 +76,7 @@ export function MemberSignup() {
       <FormControl isInvalid={!idAvailable}>
         <FormLabel>id</FormLabel>
         <Flex>
-          <input
+          <Input
             value={id}
             onChange={(e) => {
               setId(e.target.value);
@@ -78,12 +89,13 @@ export function MemberSignup() {
       </FormControl>
       <FormControl isInvalid={password.length === 0}>
         <FormLabel>password</FormLabel>
-        <input
+        <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <FormErrorMessage>암호를 입력해 주세요</FormErrorMessage>
+
+        <FormErrorMessage>암호를 입력해 주세요.</FormErrorMessage>
       </FormControl>
       <FormControl isInvalid={password != passwordCheck}>
         <FormLabel>password 확인</FormLabel>
@@ -105,7 +117,7 @@ export function MemberSignup() {
       <Button
         isDisabled={!submitAvailable}
         onClick={handleSubmit}
-        colorScheme="pink"
+        colorScheme="blue"
       >
         가입
       </Button>
