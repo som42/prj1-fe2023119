@@ -26,6 +26,8 @@ export function MemberEdit() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [emailAvailable, setEmailAvailable] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [nicknameAvailable, setNicknameAvailable] = useState(false);
 
   const toast = useToast();
   const [params] = useSearchParams();
@@ -65,6 +67,36 @@ export function MemberEdit() {
 
   if (member === null) {
     return <Spinner />;
+  }
+
+  // 닉네임이 같은지
+  let sameOriginNickname = false;
+
+  if (member !== null) {
+    sameOriginNickname = member.nickname === nickname;
+  }
+
+  let nicknameChecked = sameOriginNickname || nicknameAvailable;
+
+  function handleNicknameCheck() {
+    axios
+      .get("/api/member/check?" + params)
+      .then(() => {
+        setNicknameAvailable(false);
+        toast({
+          description: "이미 사용 중인 닉네임 입니다.",
+          status: "warning",
+        });
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          setNicknameAvailable(true);
+          toast({
+            description: "사용 가능한 닉네임 입니다.",
+            status: "success",
+          });
+        }
+      });
   }
 
   function handleEmailCheck() {
@@ -122,6 +154,22 @@ export function MemberEdit() {
   return (
     <Box>
       <h1>{id}님 정보 수정</h1>
+      <FormControl>
+        <FormLabel>nickName</FormLabel>
+        <Flex>
+          <Input
+            type="text"
+            value={nickname}
+            onChange={(e) => {
+              setNickname(e.target.value);
+              setNicknameAvailable(false);
+            }}
+          />
+          <Button isDisabled={nicknameChecked} onClick={handleNicknameCheck}>
+            중복확인
+          </Button>
+        </Flex>
+      </FormControl>
       <FormControl>
         <FormLabel>password</FormLabel>
         <Input
