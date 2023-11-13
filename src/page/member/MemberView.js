@@ -24,6 +24,7 @@ export function MemberView() {
   // /member?id=userid
   const [params] = useSearchParams();
 
+  const deleteModal = useDisclosure();
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const navigate = useNavigate();
@@ -70,6 +71,32 @@ export function MemberView() {
           });
         }
       })
+      .finally(() => deleteModal.onClose());
+  }
+
+  function handleedit() {
+    axios
+      .put("/api/member?" + params.toString())
+      .then(() => {
+        toast({
+          description: "수정 되었습니다.",
+          status: "success",
+        });
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.response.status === 401 || error.response.status === 403) {
+          toast({
+            description: "권한이 없습니다",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "수정 중 에 문제가 발생하였습니다.",
+            status: "error",
+          });
+        }
+      })
       .finally(() => onClose());
   }
 
@@ -84,13 +111,18 @@ export function MemberView() {
         <FormLabel>email</FormLabel>
         <Input value={member.email} readOnly />
       </FormControl>
-      <Button colorScheme="purple">수정</Button>
+      <Button
+        colorScheme="purple"
+        onClick={() => navigate("/member/edit?" + params.toString())}
+      >
+        수정
+      </Button>
       <Button colorScheme="red" onClick={onOpen}>
         탈퇴
       </Button>
 
       {/*  탈퇴 모달 */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={deleteModal.isOpen} onClose={deleteModal.onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>탈퇴 확인</ModalHeader>
@@ -98,7 +130,7 @@ export function MemberView() {
           <ModalBody>진짜 탈퇴 하시겠습니까?</ModalBody>
 
           <ModalFooter>
-            <Button onClick={onClose}>닫기</Button>
+            <Button onClick={deleteModal.onClose}>닫기</Button>
             <Button onClick={handleDelete} colorScheme="red">
               탈퇴
             </Button>
