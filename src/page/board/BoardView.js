@@ -42,20 +42,20 @@ export function BoardView() {
   function handleDelete() {
     axios
       .delete("/api/board/remove/" + id)
-      .then((r) => {
+      .then((response) => {
         toast({
-          description: id + " 번 게시물이 삭제되었습니다",
+          description: id + "번 게시물이 삭제되었습니다.",
           status: "success",
         });
         navigate("/");
       })
       .catch((error) => {
         toast({
-          description: "삭제 중 문제가 발생했습니다",
+          description: "삭제 중 문제가 발생하였습니다.",
           status: "error",
         });
       })
-      .finally(() => onClose);
+      .finally(() => onClose());
   }
 
   return (
@@ -84,13 +84,13 @@ export function BoardView() {
         삭제
       </Button>
 
-      {/*  삭제 모달 */}
+      {/* 삭제 모달 */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>삭제 확인</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>진짜 삭제 하시겠습니까?</ModalBody>
+          <ModalBody>삭제 하시겠습니까?</ModalBody>
 
           <ModalFooter>
             <Button onClick={onClose}>닫기</Button>
