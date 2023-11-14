@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useEffect, useState } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -15,6 +15,7 @@ import { MemberList } from "./page/member/MemberList";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
 import { MemberLogin } from "./page/member/MemberLogin";
+import axios from "axios";
 
 const routes = createBrowserRouter(
   // 전체 화면의 틀
@@ -34,8 +35,30 @@ const routes = createBrowserRouter(
   ),
 );
 
+export const LoginContext = createContext(null);
+
 function App(props) {
-  return <RouterProvider router={routes} />;
+  const [login, setLogin] = useState("");
+
+  useEffect(() => {
+    //   로그인 했는지에 대한 정보를 가져오기
+    fetchLogin();
+  }, []);
+
+  console.log(login);
+  function fetchLogin() {
+    axios.get("/api/member/login").then((response) => setLogin(response.data));
+  }
+  function isAuthenticated() {
+    // "" 비어있지 않으면 로그인을 한 상태이다.
+    return login !== "";
+  }
+
+  return (
+    <LoginContext.Provider value={{ login, fetchLogin, isAuthenticated }}>
+      <RouterProvider router={routes} />;
+    </LoginContext.Provider>
+  );
 }
 
 export default App;
