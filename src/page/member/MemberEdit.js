@@ -227,7 +227,7 @@ export function MemberEdit() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          t<ModalHeader>수정 확인</ModalHeader>
+          <ModalHeader>수정 확인</ModalHeader>
           <ModalCloseButton />
           <ModalBody>수정 하시겠습니까?</ModalBody>
           <ModalFooter>
