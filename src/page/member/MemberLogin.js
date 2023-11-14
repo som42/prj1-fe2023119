@@ -3,6 +3,8 @@ import { useState } from "react";
 import axios from "axios";
 
 export function MemberLogin() {
+  // TODO : 로그인 후 성공, 실패, 완료 코드 작성
+
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
