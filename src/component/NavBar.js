@@ -30,21 +30,31 @@ export function NavBar() {
       <Button bg={"red.100"} onClick={() => navigate("/")}>
         home
       </Button>
-      <Button bg={"red.200"} onClick={() => navigate("/write")}>
-        write
-      </Button>
-      <Button bg={"red.300"} onClick={() => navigate("/signup")}>
-        signup
-      </Button>
-      <Button bg={"red.400"} onClick={() => navigate("/member/list")}>
-        회원목록
-      </Button>
-      <Button bg={"red.500"} onClick={() => navigate("/login")}>
-        로그인{" "}
-      </Button>
-      <Button bg={"red.600"} onClick={handleLogout}>
-        로그아웃
-      </Button>
+      {isAuthenticated() && (
+        <Button bg={"red.200"} onClick={() => navigate("/write")}>
+          write
+        </Button>
+      )}
+      {isAuthenticated() || (
+        <Button bg={"red.300"} onClick={() => navigate("/signup")}>
+          signup
+        </Button>
+      )}
+      {isAuthenticated() && (
+        <Button bg={"red.400"} onClick={() => navigate("/member/list")}>
+          회원목록
+        </Button>
+      )}
+      {isAuthenticated || (
+        <Button bg={"red.500"} onClick={() => navigate("/login")}>
+          로그인{" "}
+        </Button>
+      )}
+      {isAuthenticated && (
+        <Button bg={"red.600"} onClick={handleLogout}>
+          로그아웃
+        </Button>
+      )}
     </Flex>
   );
 }
