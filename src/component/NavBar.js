@@ -1,12 +1,28 @@
-import { Flex, Button } from "@chakra-ui/react";
+import { Flex, Button, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import { LoginContext } from "../App";
 
 export function NavBar() {
+  // 세션이 지금 서버에 있어서 클라이언트 한테 건네줄수있는 코드를 계쏙 넣어줘야 한다.
+  const { fetchLogin, login, isAuthenticated } = useContext(LoginContext);
+  const toast = useToast();
+
   const navigate = useNavigate();
 
   function handleLogout() {
-    axios.post("/api/member/logout").then(() => console.log("로그아웃 성공"));
+    // TODO : 로그아웃 후 할 일 추가
+    axios
+      .post("/api/member/logout")
+      .then(() => {
+        toast({
+          description: "로그아웃 되었습니다",
+          status: "info",
+        });
+        navigate("/");
+      })
+      .finally(() => fetchLogin());
   }
 
   return (
