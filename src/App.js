@@ -58,9 +58,17 @@ function App(props) {
     return login.id === userId;
   }
 
+  function isAdmin() {
+    // 매니저 인지 아닌지?
+    if (login.auth) {
+      return login.auth.some((elem) => elem.name === "admin");
+    }
+    return false;
+  }
+
   return (
     <LoginContext.Provider
-      value={{ login, fetchLogin, isAuthenticated, hasAccess }}
+      value={{ login, fetchLogin, isAuthenticated, hasAccess, isAdmin }}
     >
       <RouterProvider router={routes} />;
     </LoginContext.Provider>
