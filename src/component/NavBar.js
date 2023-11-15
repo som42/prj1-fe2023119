@@ -11,6 +11,12 @@ export function NavBar() {
 
   const navigate = useNavigate();
 
+  const urlParams = new URLSearchParams();
+
+  if (login !== "") {
+    urlParams.set("id", login.id);
+  }
+
   function handleLogout() {
     axios
       .post("/api/member/logout")
@@ -42,6 +48,14 @@ export function NavBar() {
       {isAdmin() && (
         <Button bg="red.400" onClick={() => navigate("/member/list")}>
           회원목록
+        </Button>
+      )}
+      {isAuthenticated() && (
+        <Button
+          bg="blue.100"
+          onClick={() => navigate("/member?" + urlParams.toString())}
+        >
+          회원 정보
         </Button>
       )}
       {isAuthenticated() || (
