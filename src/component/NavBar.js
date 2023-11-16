@@ -4,11 +4,12 @@ import axios from "axios";
 import { useContext, useEffect } from "react";
 import { LoginContext } from "./LogInProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouseFire } from "@fortawesome/free-solid-svg-icons";
+import { faDoorClosed, faHouseFire } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons/faUserPlus";
 import { faUserGear } from "@fortawesome/free-solid-svg-icons/faUserGear";
 import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
+import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
 
 export function NavBar() {
   const { fetchLogin, login, isAuthenticated, isAdmin } =
@@ -74,11 +75,13 @@ export function NavBar() {
       )}
       {isAuthenticated() || (
         <Button bg="red.500" onClick={() => navigate("/login")}>
+          <FontAwesomeIcon icon={faDoorClosed} />
           로그인
         </Button>
       )}
       {isAuthenticated() && (
         <Button bg="red.600" onClick={handleLogout}>
+          <FontAwesomeIcon icon={faDoorOpen} />
           로그아웃
         </Button>
       )}
