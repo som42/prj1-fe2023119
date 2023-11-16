@@ -3,6 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { LoginContext } from "./LogInProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouseFire } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons/faUserPlus";
+import { faUserGear } from "@fortawesome/free-solid-svg-icons/faUserGear";
+import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 
 export function NavBar() {
   const { fetchLogin, login, isAuthenticated, isAdmin } =
@@ -36,20 +42,24 @@ export function NavBar() {
   return (
     <Flex>
       <Button bg="red.100" onClick={() => navigate("/")}>
+        <FontAwesomeIcon icon={faHouseFire} />
         home
       </Button>
       {isAuthenticated() && (
         <Button bg="red.200" onClick={() => navigate("/write")}>
+          <FontAwesomeIcon icon={faPenToSquare} />
           write
         </Button>
       )}
       {isAuthenticated() || (
         <Button bg="red.300" onClick={() => navigate("/signup")}>
+          <FontAwesomeIcon icon={faUserPlus} />
           signup
         </Button>
       )}
       {isAdmin() && (
         <Button bg="red.400" onClick={() => navigate("/member/list")}>
+          <FontAwesomeIcon icon={faUsers} />
           회원목록
         </Button>
       )}
@@ -58,6 +68,7 @@ export function NavBar() {
           bg="blue.100"
           onClick={() => navigate("/member?" + urlParams.toString())}
         >
+          <FontAwesomeIcon icon={faUserGear} />
           회원 정보
         </Button>
       )}
