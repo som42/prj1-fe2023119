@@ -21,11 +21,13 @@ export function BoardWrite() {
 
   function handleSubmit() {
     setIsSubmitting(true);
+    // js로 포트 요청.
     axios
       .post("/api/board/add", {
         title,
         content,
       })
+      // 잘 됬으면
       .then(() => {
         toast({
           description: "새 글이 저장되었습니다.",
@@ -33,6 +35,7 @@ export function BoardWrite() {
         });
         navigate("/");
       })
+      // 잘 안됬으면
       .catch((error) => {
         console.log(error.response.status);
         if (error.response.status === 400) {
@@ -47,6 +50,7 @@ export function BoardWrite() {
           });
         }
       })
+      // 위에 두개가 다 끝나면 이건 무조건 실행된다.
       .finally(() => setIsSubmitting(false));
   }
 
@@ -56,6 +60,7 @@ export function BoardWrite() {
       <Box>
         <FormControl>
           <FormLabel>제목</FormLabel>
+          {/*컴포넌트가 새로 그려질때마다 저장 하는 공간이 스테이트*/}
           <Input value={title} onChange={(e) => setTitle(e.target.value)} />
         </FormControl>
         <FormControl>
