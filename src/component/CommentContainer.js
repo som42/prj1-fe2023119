@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, NotAllowedIcon } from "@chakra-ui/icons";
 import { LoginContext } from "./LogInProvider";
 
 function CommentForm({ boardId, isSubmitting, onSubmit }) {
@@ -43,7 +43,18 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
 }
 
 function CommentItem({ comment, onDeleteModalOpen }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [commentEdited, setCommentEdited] = useState(comment.comment);
+
   const { hasAccess } = useContext(LoginContext);
+
+  function handleSubmit() {
+    axios
+      .put("/api/comment/edit", { id: comment.id, comment: commentEdited })
+      .then(() => console.log("good"))
+      .catch(() => console.log("bad"))
+      .finally(() => console.log("done"));
+  }
 
   return (
     <Box>
@@ -52,17 +63,51 @@ function CommentItem({ comment, onDeleteModalOpen }) {
         <Text fontSize="xs">{comment.inserted}</Text>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
-        <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="sm">
-          {comment.comment}
-        </Text>
+        <Box flex={1}>
+          <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="sm">
+            {comment.comment}
+          </Text>
+          {isEditing && (
+            <Box>
+              <Textarea
+                value={commentEdited}
+                onChange={(e) => setCommentEdited(e.target.value)}
+              />
+              <Button colorScheme="blue" onClick={handleSubmit}>
+                저장
+              </Button>
+            </Box>
+          )}
+        </Box>
+
         {hasAccess(comment.memberId) && (
-          <Button
-            onClick={() => onDeleteModalOpen(comment.id)}
-            size="xs"
-            colorScheme="red"
-          >
-            <DeleteIcon />
-          </Button>
+          <Box>
+            {isEditing || (
+              <Button
+                size="xs"
+                colorScheme="purple"
+                onClick={() => setIsEditing(true)}
+              >
+                <EditIcon />
+              </Button>
+            )}
+            {isEditing && (
+              <Button
+                size="xs"
+                colorScheme="gray"
+                onClick={() => setIsEditing(false)}
+              >
+                <NotAllowedIcon />
+              </Button>
+            )}
+            <Button
+              onClick={() => onDeleteModalOpen(comment.id)}
+              size="xs"
+              colorScheme="red"
+            >
+              <DeleteIcon />
+            </Button>
+          </Box>
         )}
       </Flex>
     </Box>
@@ -71,6 +116,7 @@ function CommentItem({ comment, onDeleteModalOpen }) {
 
 function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
   const { hasAccess } = useContext(LoginContext);
+
   return (
     <Card>
       <CardHeader>
@@ -97,9 +143,8 @@ export function CommentContainer({ boardId }) {
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  // const [id, setId] = useState(0); 렌더링 되지 않기 때문에 useRef를 썻다.
-  // useRef :  컴포넌트에서 임시로 값을 저장하는 용도로 사용
-  // 이벤트 핸들러 메소드 안에서 읽거나,
+  // const [id, setId] = useState(0);
+  // useRef : 컴포넌트에서 임시로 값을 저장하는 용도로 사용
   const commentIdRef = useRef(0);
 
   const { isAuthenticated } = useContext(LoginContext);
@@ -124,13 +169,13 @@ export function CommentContainer({ boardId }) {
       .post("/api/comment/add", comment)
       .then(() => {
         toast({
-          description: "댓글이 등록되었습니다",
+          description: "댓글이 등록되었습니다.",
           status: "success",
         });
       })
       .catch((error) => {
         toast({
-          description: "댓글 등록 중 문제가 발생했습니다",
+          description: "댓글 등록 중 문제가 발생하였습니다.",
           status: "error",
         });
       })
@@ -138,20 +183,17 @@ export function CommentContainer({ boardId }) {
   }
 
   function handleDelete() {
-    // console.log(id + "번 댓글 삭제");
-    // TODO: 모달, then, catch, finally
-
     setIsSubmitting(true);
     axios
       .delete("/api/comment/" + commentIdRef.current)
       .then(() => {
         toast({
-          description: " 댓글이 삭제 되었습니다.",
+          description: "댓글이 삭제되었습니다.",
           status: "success",
         });
       })
       .catch((error) => {
-        if (error.reponse.status === 401 || error.reponse.status === 403) {
+        if (error.response.status === 401 || error.response.status === 403) {
           toast({
             description: "권한이 없습니다.",
             status: "warning",
