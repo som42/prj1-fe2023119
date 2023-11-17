@@ -16,11 +16,13 @@ export function BoardWrite() {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const toast = useToast();
+  const toast = useToast(); //Toast로 잘되든 안되든 요청 결과를 보여 주면 된다.
   const navigate = useNavigate();
 
   function handleSubmit() {
+    // 저장 버튼 누르자 마자
     setIsSubmitting(true);
+
     // js로 포트 요청.
     axios
       .post("/api/board/add", {
@@ -33,7 +35,7 @@ export function BoardWrite() {
           description: "새 글이 저장되었습니다.",
           status: "success",
         });
-        navigate("/");
+        navigate("/"); // 저장이 끝났으면 홈으로 이동
       })
       // 잘 안됬으면
       .catch((error) => {
