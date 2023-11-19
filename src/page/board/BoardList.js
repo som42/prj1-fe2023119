@@ -12,7 +12,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -23,13 +23,15 @@ export function BoardList() {
 
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  // 링크가 바뀔 때는
+  const location = useLocation();
 
   useEffect(() => {
     axios.get("/api/board/list?" + params).then((response) => {
       setBoardList(response.data.boardList);
       setPageInfo(response.data.pageInfo);
     });
-  }, [params]);
+  }, [location]);
 
   if (boardList === null) {
     return <Spinner />;
