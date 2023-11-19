@@ -43,6 +43,7 @@ function Pagination({ pageInfo }) {
 
       {pageNumbers.map((pageNumber) => (
         <Button
+          colorScheme="blackAlpha"
           key={pageNumber}
           variant={
             pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
