@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toast = useToast(); //Toast로 잘되든 안되든 요청 결과를 보여 주면 된다.
@@ -29,7 +29,7 @@ export function BoardWrite() {
       .postForm("/api/board/add", {
         title,
         content,
-        file,
+        files,
       })
       // 잘 됬으면
       .then(() => {
@@ -79,7 +79,8 @@ export function BoardWrite() {
           <Input
             type="file"
             accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
+            multiple //파일 여러개 선택하게 해준다.
+            onChange={(e) => setFiles(e.target.files)}
           />
         </FormControl>
 
