@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -119,9 +120,15 @@ export function BoardView() {
         <LikeContainer like={like} onClick={handleLike} />
       </Flex>
       <FormControl>
-        <FormLabel>제목</FormLabel>
+        <FormLabel>제목3</FormLabel>
         <Input value={board.title} readOnly />
       </FormControl>
+      {/* 이미지 출력 */}
+      {board.fileNames.map((file) => (
+        <Box my="5px" border="3px solid black">
+          <Image width="100%" src={file.url} alt="{file.name" />
+        </Box>
+      ))}
       <FormControl>
         <FormLabel>본문</FormLabel>
         <Textarea value={board.content} readOnly />
