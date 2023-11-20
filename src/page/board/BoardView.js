@@ -124,7 +124,7 @@ export function BoardView() {
         <Input value={board.title} readOnly />
       </FormControl>
       {/* 이미지 출력 */}
-      {board.fileNames.map((file) => (
+      {board.files.map((file) => (
         <Box my="5px" border="3px solid black">
           <Image width="100%" src={file.url} alt="{file.name" />
         </Box>
