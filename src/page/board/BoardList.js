@@ -3,6 +3,8 @@ import {
   Badge,
   Box,
   Button,
+  Flex,
+  Input,
   Spinner,
   Table,
   Tbody,
@@ -63,6 +65,27 @@ function Pagination({ pageInfo }) {
         </Button>
       )}
     </Box>
+  );
+}
+
+function SearchComponent() {
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
+
+  function handleSearch() {
+    // 검색 했을 때 요청 경로 : /?k=keyword
+    const params = new URLSearchParams();
+
+    params.set("k", keyword);
+
+    navigate("/?" + params);
+  }
+
+  return (
+    <Flex>
+      <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+      <Button onClick={handleSearch}>검색</Button>
+    </Flex>
   );
 }
 
@@ -130,6 +153,7 @@ export function BoardList() {
         </Table>
       </Box>
 
+      <SearchComponent />
       <Pagination pageInfo={pageInfo} />
     </Box>
   );
