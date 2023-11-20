@@ -27,6 +27,7 @@ const routes = createBrowserRouter(
       <Route index element={<BoardList />} />
       {/*게시물을 쓰는 컴포넌트 localhost:3000/Write*/}
       <Route path="write" element={<BoardWrite />} />
+      {/* 게시물 보는 곳으로 가기 */}
       <Route path="board/:id" element={<BoardView />} />
       <Route path="edit/:id" element={<BoardEdit />}></Route>
       <Route path="signup" element={<MemberSignup />} />
