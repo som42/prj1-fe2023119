@@ -22,6 +22,24 @@ import {
   faAngleRight,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
+import * as PropTypes from "prop-types";
+
+function PageButton({ variant, pageNumber, children }) {
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  console.log(params.toString());
+
+  function handleClick() {
+    params.set("p", pageNumber);
+    navigate("/?" + params);
+  }
+
+  return (
+    <Button variant={variant} onClick={handleClick}>
+      {children}
+    </Button>
+  );
+}
 
 function Pagination({ pageInfo }) {
   const pageNumbers = [];
@@ -44,16 +62,16 @@ function Pagination({ pageInfo }) {
       )}
 
       {pageNumbers.map((pageNumber) => (
-        <Button
+        <PageButton
           colorScheme="blackAlpha"
           key={pageNumber}
           variant={
             pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
           }
-          onClick={() => navigate("/?p=" + pageNumber)}
+          pageNumber={pageNumber}
         >
           {pageNumber}
-        </Button>
+        </PageButton>
       ))}
 
       {pageInfo.nextPageNumber && (
@@ -75,7 +93,6 @@ function SearchComponent() {
   function handleSearch() {
     // 검색 했을 때 요청 경로 : /?k=keyword
     const params = new URLSearchParams();
-
     params.set("k", keyword);
 
     navigate("/?" + params);
