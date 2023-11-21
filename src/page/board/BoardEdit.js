@@ -2,7 +2,9 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -12,18 +14,23 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Switch,
   Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useImmer } from "use-immer";
 import axios from "axios";
 import { logDOM } from "@testing-library/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null);
+  const [removeFileIds, setRemoveFileIds] = useState([]);
+  const [uploadFiles, setUploadFiles] = useState(null);
 
   // /edit/:id
   const { id } = useParams();
@@ -47,7 +54,13 @@ export function BoardEdit() {
     // PUT /api/board/edit
 
     axios
-      .put("/api/board/edit", board)
+      .putForm("/api/board/edit", {
+        id: board.id,
+        title: board.title,
+        content: board.content,
+        removeFileIds,
+        uploadFiles,
+      })
       .then(() => {
         toast({
           description: board.id + "번 게시글이 수정되었습니다.",
@@ -72,6 +85,16 @@ export function BoardEdit() {
       .finally(() => onClose());
   }
 
+  function handleRemoveFileSwitch(e) {
+    if (e.target.checked) {
+      // removeFileIds 에 추가
+      setRemoveFileIds([...removeFileIds, e.target.value]);
+    } else {
+      // removeFileIds 에서 삭제
+      setRemoveFileIds(removeFileIds.filter((item) => item !== e.target.value));
+    }
+  }
+
   return (
     <Box>
       <h1>{id}번 글 수정</h1>
@@ -85,9 +108,41 @@ export function BoardEdit() {
             })
           }
         />
-      </FormControl>
-      <FormControl>
-        <FormLabel>본문</FormLabel>
+        {/*수정할 때 이미지 체크하고 저장 하면 삭제되게 하기.*/}
+        {board.files.length > 0 &&
+          board.files.map((file) => (
+            <Box key={file.id} my="5px" border="3px solid #ffd6d1">
+              <Box>
+                <Image src={file.url} alt={file.name} width="100%" />
+              </Box>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel>
+                  <FontAwesomeIcon icon={faTrashCan} color="pink" />
+                </FormLabel>
+                <Switch
+                  value={file.id}
+                  colorScheme="red"
+                  onChange={handleRemoveFileSwitch}
+                />
+              </FormControl>
+            </Box>
+          ))}
+        {/*파일 업로드*/}
+        <FormControl>
+          <FormLabel>이미지</FormLabel>
+          <Input
+            type="file"
+            accept="image/*"
+            multiple //파일 여러개 선택하게 해준다.
+            onChange={(e) => setUploadFiles(e.target.files)}
+          />
+          <FormHelperText>
+            한개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부하세요.
+          </FormHelperText>
+        </FormControl>
+        <FormControl>
+          <FormLabel>본문</FormLabel>
+        </FormControl>
         <Textarea
           value={board.content}
           onChange={(e) =>
