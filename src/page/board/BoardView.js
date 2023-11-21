@@ -87,6 +87,7 @@ export function BoardView() {
   }
 
   function handleDelete() {
+    // 삭제 하면 어떤 일이 일어나는지 적어줘야 한다.
     axios
       .delete("/api/board/remove/" + id)
       .then((response) => {
