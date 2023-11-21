@@ -54,6 +54,7 @@ export function BoardEdit() {
     // PUT /api/board/edit
 
     axios
+
       .putForm("/api/board/edit", {
         id: board.id,
         title: board.title,
