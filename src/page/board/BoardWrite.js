@@ -2,9 +2,15 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Center,
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   Textarea,
   useToast,
@@ -18,29 +24,24 @@ export function BoardWrite() {
   const [uploadFiles, setUploadFiles] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const toast = useToast(); //Toast로 잘되든 안되든 요청 결과를 보여 주면 된다.
+  const toast = useToast();
   const navigate = useNavigate();
 
   function handleSubmit() {
-    // 저장 버튼 누르자 마자
     setIsSubmitting(true);
-
-    // js로 포트 요청.
     axios
       .postForm("/api/board/add", {
         title,
         content,
         uploadFiles,
       })
-      // 잘 됬으면
       .then(() => {
         toast({
           description: "새 글이 저장되었습니다.",
           status: "success",
         });
-        navigate("/"); // 저장이 끝났으면 홈으로 이동
+        navigate("/");
       })
-      // 잘 안됬으면
       .catch((error) => {
         console.log(error.response.status);
         if (error.response.status === 400) {
@@ -55,47 +56,51 @@ export function BoardWrite() {
           });
         }
       })
-      // 위에 두개가 다 끝나면 이건 무조건 실행된다.
       .finally(() => setIsSubmitting(false));
   }
 
   return (
-    <Box>
-      <h1>게시물 작성</h1>
-      <Box>
-        <FormControl>
-          <FormLabel>제목</FormLabel>
-          {/*컴포넌트가 새로 그려질때마다 저장 하는 공간이 스테이트*/}
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </FormControl>
-        <FormControl>
-          <FormLabel>본문</FormLabel>
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          ></Textarea>
-        </FormControl>
-        <FormControl>
-          <FormLabel>이미지</FormLabel>
-          <Input
-            type="file"
-            accept="image/*"
-            multiple //파일 여러개 선택하게 해준다.
-            onChange={(e) => setUploadFiles(e.target.files)}
-          />
-          <FormHelperText>
-            한개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부하세요.
-          </FormHelperText>
-        </FormControl>
-
-        <Button
-          isDisabled={isSubmitting}
-          onClick={handleSubmit}
-          colorScheme="blue"
-        >
-          저장
-        </Button>
-      </Box>
-    </Box>
+    <Center>
+      <Card w={"lg"}>
+        <CardHeader>
+          <Heading>게시물 작성</Heading>
+        </CardHeader>
+        <CardBody>
+          <FormControl mb={5}>
+            <FormLabel>제목</FormLabel>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+          </FormControl>
+          <FormControl mb={5}>
+            <FormLabel>본문</FormLabel>
+            <Textarea
+              h={"sm"}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            ></Textarea>
+          </FormControl>
+          <FormControl mb={5}>
+            <FormLabel>이미지</FormLabel>
+            <Input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => setUploadFiles(e.target.files)}
+            />
+            <FormHelperText>
+              한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부하세요.
+            </FormHelperText>
+          </FormControl>
+        </CardBody>
+        <CardFooter>
+          <Button
+            isDisabled={isSubmitting}
+            onClick={handleSubmit}
+            colorScheme="blue"
+          >
+            저장
+          </Button>
+        </CardFooter>
+      </Card>
+    </Center>
   );
 }

@@ -1,15 +1,18 @@
-import { Box, Button, Flex, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Spacer, useToast } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { LoginContext } from "./LogInProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDoorClosed, faHouseFire } from "@fortawesome/free-solid-svg-icons";
-import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons/faUserPlus";
-import { faUserGear } from "@fortawesome/free-solid-svg-icons/faUserGear";
-import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
-import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
+import {
+  faHouse,
+  faPen,
+  faRightFromBracket,
+  faRightToBracket,
+  faUser,
+  faUserPlus,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function NavBar() {
   const { fetchLogin, login, isAuthenticated, isAdmin } =
@@ -41,49 +44,80 @@ export function NavBar() {
   }
 
   return (
-    <Flex>
-      {isAuthenticated() && <Box>{login.nickName} 님</Box>}
-
-      <Button bg="red.100" onClick={() => navigate("/")}>
-        <FontAwesomeIcon icon={faHouseFire} />
-        home
+    <Flex mb={10}>
+      <Button
+        borderRadius={0}
+        variant="ghost"
+        size="lg"
+        leftIcon={<FontAwesomeIcon icon={faHouse} />}
+        onClick={() => navigate("/")}
+      >
+        HOME
       </Button>
       {isAuthenticated() && (
-        <Button bg="red.200" onClick={() => navigate("/write")}>
-          <FontAwesomeIcon icon={faPenToSquare} />
-          write
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faPen} />}
+          onClick={() => navigate("/write")}
+        >
+          작성
         </Button>
       )}
+      <Spacer />
       {isAuthenticated() || (
-        <Button bg="red.300" onClick={() => navigate("/signup")}>
-          <FontAwesomeIcon icon={faUserPlus} />
-          signup
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+          onClick={() => navigate("/signup")}
+        >
+          회원가입
         </Button>
       )}
       {isAdmin() && (
-        <Button bg="red.400" onClick={() => navigate("/member/list")}>
-          <FontAwesomeIcon icon={faUsers} />
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faUsers} />}
+          onClick={() => navigate("/member/list")}
+        >
           회원목록
         </Button>
       )}
       {isAuthenticated() && (
         <Button
-          bg="blue.100"
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faUser} />}
           onClick={() => navigate("/member?" + urlParams.toString())}
         >
-          <FontAwesomeIcon icon={faUserGear} />
-          회원 정보
+          {login.nickName}님
         </Button>
       )}
       {isAuthenticated() || (
-        <Button bg="red.500" onClick={() => navigate("/login")}>
-          <FontAwesomeIcon icon={faDoorClosed} />
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+          onClick={() => navigate("/login")}
+        >
           로그인
         </Button>
       )}
       {isAuthenticated() && (
-        <Button bg="red.600" onClick={handleLogout}>
-          <FontAwesomeIcon icon={faDoorOpen} />
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+          onClick={handleLogout}
+        >
           로그아웃
         </Button>
       )}

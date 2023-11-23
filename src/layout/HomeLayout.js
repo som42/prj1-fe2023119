@@ -1,12 +1,11 @@
 import { Box } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
+import React from "react";
 import { NavBar } from "../component/NavBar";
 
 export function HomeLayout() {
-  // 전체 화면의 틀
   return (
-    <Box>
-      {/*NavBar는 component 폴더로 옮겨준다.*/}
+    <Box mx={{ base: 0, md: 10, lg: 40 }} mb={80}>
       <NavBar />
       <Outlet />
     </Box>

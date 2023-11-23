@@ -4,6 +4,11 @@ import axios from "axios";
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -17,9 +22,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  others,
   Spinner,
-  Text,
   Textarea,
   Tooltip,
   useDisclosure,
@@ -30,10 +33,8 @@ import { CommentContainer } from "../../component/CommentContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
-import * as PropTypes from "prop-types";
 
 function LikeContainer({ like, onClick }) {
-  // isAuthenticated 실행결과가 트루면 로그인 된 상태
   const { isAuthenticated } = useContext(LoginContext);
 
   if (like === null) {
@@ -44,13 +45,8 @@ function LikeContainer({ like, onClick }) {
     <Flex gap={2}>
       <Tooltip isDisabled={isAuthenticated()} hasArrow label={"로그인 하세요."}>
         <Button variant="ghost" size="xl" onClick={onClick}>
-          {/*<FontAwesomeIcon icon={faHeart} size="xl" />*/}
-          {like.like && (
-            <FontAwesomeIcon icon={fullHeart} size="xl" color="red" />
-          )}
-          {like.like || (
-            <FontAwesomeIcon icon={emptyHeart} size="xl" color="red" />
-          )}
+          {like.like && <FontAwesomeIcon icon={fullHeart} size="xl" />}
+          {like.like || <FontAwesomeIcon icon={emptyHeart} size="xl" />}
         </Button>
       </Tooltip>
       <Heading size="lg">{like.countLike}</Heading>
@@ -87,7 +83,6 @@ export function BoardView() {
   }
 
   function handleDelete() {
-    // 삭제 하면 어떤 일이 일어나는지 적어줘야 한다.
     axios
       .delete("/api/board/remove/" + id)
       .then((response) => {
@@ -110,49 +105,66 @@ export function BoardView() {
     axios
       .post("/api/like", { boardId: board.id })
       .then((response) => setLike(response.data))
-      .catch(() => console.log("b"))
-      .finally(() => console.log("d"));
+      .catch(() => console.log("bad"))
+      .finally(() => console.log("done"));
   }
 
   return (
     <Box>
-      <Flex justifyContent="space-between">
-        <Heading size="xl">{board.id}번 글 보기</Heading>
-        <LikeContainer like={like} onClick={handleLike} />
-      </Flex>
-      <FormControl>
-        <FormLabel>제목3</FormLabel>
-        <Input value={board.title} readOnly />
-      </FormControl>
-      {/* 이미지 출력 */}
-      {board.files.map((file) => (
-        <Box my="5px" border="3px solid black">
-          <Image width="100%" src={file.url} alt="{file.name" />
-        </Box>
-      ))}
-      <FormControl>
-        <FormLabel>본문</FormLabel>
-        <Textarea value={board.content} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>작성자</FormLabel>
-        <Input value={board.nickName} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>작성일시</FormLabel>
-        <Input value={board.inserted} readOnly />
-      </FormControl>
+      <Center>
+        <Card w={"lg"}>
+          <CardHeader>
+            <Flex justifyContent="space-between">
+              <Heading size="xl">{board.id}번 글 보기</Heading>
+              <LikeContainer like={like} onClick={handleLike} />
+            </Flex>
+          </CardHeader>
+          <CardBody>
+            <FormControl mb={5}>
+              <FormLabel>제목</FormLabel>
+              <Input value={board.title} readOnly />
+            </FormControl>
+            <FormControl mb={5}>
+              <FormLabel>본문</FormLabel>
+              <Textarea h={"sm"} value={board.content} readOnly />
+            </FormControl>
 
-      {(hasAccess(board.writer) || isAdmin()) && (
-        <Box>
-          <Button colorScheme="purple" onClick={() => navigate("/edit/" + id)}>
-            수정
-          </Button>
-          <Button colorScheme="red" onClick={onOpen}>
-            삭제
-          </Button>
-        </Box>
-      )}
+            {/* 이미지 출력 */}
+            {board.files.map((file) => (
+              <Card key={file.id} my={5}>
+                <CardBody>
+                  <Image width="100%" src={file.url} alt={file.name} />
+                </CardBody>
+              </Card>
+            ))}
+
+            <FormControl mb={5}>
+              <FormLabel>작성자</FormLabel>
+              <Input value={board.nickName} readOnly />
+            </FormControl>
+            <FormControl mb={5}>
+              <FormLabel>작성일시</FormLabel>
+              <Input value={board.inserted} readOnly />
+            </FormControl>
+          </CardBody>
+
+          <CardFooter>
+            {(hasAccess(board.writer) || isAdmin()) && (
+              <Flex gap={2}>
+                <Button
+                  colorScheme="purple"
+                  onClick={() => navigate("/edit/" + id)}
+                >
+                  수정
+                </Button>
+                <Button colorScheme="red" onClick={onOpen}>
+                  삭제
+                </Button>
+              </Flex>
+            )}
+          </CardFooter>
+        </Card>
+      </Center>
 
       {/* 삭제 모달 */}
       <Modal isOpen={isOpen} onClose={onClose}>

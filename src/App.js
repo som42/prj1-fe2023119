@@ -29,6 +29,7 @@ const routes = createBrowserRouter(
       <Route path="write" element={<BoardWrite />} />
       {/* 게시물 보는 곳으로 가기 */}
       <Route path="board/:id" element={<BoardView />} />
+      {/*게시물 수정 화면*/}
       <Route path="edit/:id" element={<BoardEdit />}></Route>
       <Route path="signup" element={<MemberSignup />} />
       <Route path="member/list" element={<MemberList />} />
